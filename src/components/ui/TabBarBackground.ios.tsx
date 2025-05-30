@@ -5,8 +5,8 @@ import { StyleSheet } from 'react-native';
 export default function BlurTabBarBackground() {
   return (
     <BlurView
-      // System chrome material automatically adapts to the system's theme
-      // and matches the native tab bar appearance on iOS.
+      // 시스템 크롬 머티리얼은 시스템 테마에 자동으로 적응하며
+      // iOS의 네이티브 탭 표시줄 모양과 일치합니다.
       tint="systemChromeMaterial"
       intensity={100}
       style={StyleSheet.absoluteFill}

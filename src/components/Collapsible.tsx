@@ -21,7 +21,9 @@ export function Collapsible({ children, title }: PropsWithChildren & { title: st
           name="chevron.right"
           size={18}
           weight="medium"
-          color={theme === 'light' ? Colors.light.icon : Colors.dark.icon}
+          // 아이콘 색상을 현재 테마의 텍스트 색상으로 변경하거나, Colors.ts에 icon 색상을 추가 정의할 수 있습니다.
+          // 여기서는 현재 테마의 기본 텍스트 색상을 사용합니다.
+          color={Colors[theme].text}
           style={{ transform: [{ rotate: isOpen ? '90deg' : '0deg' }] }}
         />
 
