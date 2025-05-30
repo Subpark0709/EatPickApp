@@ -46,7 +46,7 @@ const AuthNavigator: React.FC = () => {
       */}
       <Stack.Screen 
         name="Welcome" 
-        component={WelcomeScreen} 
+        component={() => <WelcomeScreen onLogin={() => console.log('Login button pressed - dummy action')} />} 
         // options={{ headerShown: false }} // Example: hide header for welcome screen
       />
       {/*
