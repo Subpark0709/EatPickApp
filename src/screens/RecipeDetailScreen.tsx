@@ -11,6 +11,7 @@ import {
 import { useRoute, RouteProp } from '@react-navigation/native';
 import { HomeStackParamList } from '../navigation/AppNavigator'; // Adjust path if needed
 import { Colors } from '../constants/Colors'; // Adjust path if needed
+import CustomAppBar from '../../components/organisms/CustomAppBar'; // CustomAppBar 임포트
 
 // 상세 레시피 정보를 위한 목업 데이터
 const detailedMockRecipes = [
@@ -103,108 +104,117 @@ const RecipeDetailScreen: React.FC = () => {
 
   if (!recipe) {
     return (
-      <View style={[styles.container, styles.centered, { backgroundColor: currentColors.background }]}>
-        <Text style={[styles.errorText, { color: currentColors.text }]}>레시피를 찾을 수 없습니다.</Text>
+      <View style={{flex: 1, backgroundColor: currentColors.background }}>
+        <CustomAppBar title="레시피 정보 없음" showBackButton={true} />
+        <View style={[styles.container, styles.centered]}>
+          <Text style={[styles.errorText, { color: currentColors.text }]}>레시피를 찾을 수 없습니다.</Text>
+        </View>
       </View>
     );
   }
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: currentColors.background }]}>
-      {recipe.image && (
-        <Image source={{ uri: recipe.image }} style={styles.recipeImage} resizeMode="cover" />
-      )}
-      <View style={styles.contentContainer}>
-        <Text style={[styles.title, { color: currentColors.text }]}>{recipe.name}</Text>
+    <View style={{ flex: 1, backgroundColor: currentColors.background }}>
+      <CustomAppBar title={recipe.name} showBackButton={true} />
+      <ScrollView style={styles.container}>
+        {recipe.image && (
+          <Image source={{ uri: recipe.image }} style={styles.recipeImage} resizeMode="cover" />
+        )}
+        <View style={styles.contentContainer}>
+          {/* 기존 recipe.name Text는 CustomAppBar의 title로 대체되었으므로 삭제
+          <Text style={[styles.title, { color: currentColors.text }]}>{recipe.name}</Text>
+          */}
 
-        <View style={styles.metaSection}>
-          <Text style={[styles.metaText, { color: currentColors.placeholderText }]}>조리 시간: {recipe.cookingTime}</Text>
-          <Text style={[styles.metaText, { color: currentColors.placeholderText }]}>난이도: {recipe.difficulty}</Text>
-        </View>
-         <Text style={[styles.metaText, { color: currentColors.placeholderText, marginBottom: 20 }]}>칼로리: {recipe.nutritionalInfo.calories}</Text>
-
-
-        <Text style={[styles.sectionTitle, { color: currentColors.primary }]}>재료</Text>
-        {recipe.ingredients.map((ingredient, index) => (
-          <View key={index} style={styles.listItem}>
-            <Text style={[styles.listItemText, { color: currentColors.text }]}>{ingredient.name}</Text>
-            <Text style={[styles.listItemAmount, { color: currentColors.placeholderText }]}>{ingredient.amount}</Text>
+          <View style={styles.metaSection}>
+            <Text style={[styles.metaText, { color: currentColors.placeholderText }]}>조리 시간: {recipe.cookingTime}</Text>
+            <Text style={[styles.metaText, { color: currentColors.placeholderText }]}>난이도: {recipe.difficulty}</Text>
           </View>
-        ))}
+          <Text style={[styles.metaText, { color: currentColors.placeholderText, marginBottom: 20 }]}>칼로리: {recipe.nutritionalInfo.calories}</Text>
 
-        <Text style={[styles.sectionTitle, { color: currentColors.primary, marginTop: 20 }]}>조리 방법</Text>
-        {recipe.instructions.map((instruction, index) => (
-          <Text key={index} style={[styles.instructionText, { color: currentColors.text }]}>
-            {`${index + 1}. ${instruction}`}
-          </Text>
-        ))}
+          <Text style={[styles.sectionTitle, { color: currentColors.primary }]}>재료</Text>
+          {recipe.ingredients.map((ingredient, index) => (
+            <View key={index} style={[styles.listItem, { borderBottomColor: currentColors.borderColor }]}>
+              <Text style={[styles.listItemText, { color: currentColors.text }]}>{ingredient.name}</Text>
+              <Text style={[styles.listItemAmount, { color: currentColors.placeholderText }]}>{ingredient.amount}</Text>
+            </View>
+          ))}
 
-        <Text style={[styles.sectionTitle, { color: currentColors.primary, marginTop: 20 }]}>영양 정보</Text>
-        <Text style={[styles.infoText, { color: currentColors.text }]}>칼로리: {recipe.nutritionalInfo.calories}</Text>
-        <Text style={[styles.infoText, { color: currentColors.text }]}>단백질: {recipe.nutritionalInfo.protein}</Text>
-        <Text style={[styles.infoText, { color: currentColors.text }]}>탄수화물: {recipe.nutritionalInfo.carbs}</Text>
-        <Text style={[styles.infoText, { color: currentColors.text }]}>지방: {recipe.nutritionalInfo.fat}</Text>
-      </View>
-    </ScrollView>
+          <Text style={[styles.sectionTitle, { color: currentColors.primary, marginTop: 20 }]}>조리 방법</Text>
+          {recipe.instructions.map((instruction, index) => (
+            <Text key={index} style={[styles.instructionText, { color: currentColors.text }]}>
+              {`${index + 1}. ${instruction}`}
+            </Text>
+          ))}
+
+          <Text style={[styles.sectionTitle, { color: currentColors.primary, marginTop: 20 }]}>영양 정보</Text>
+          <Text style={[styles.infoText, { color: currentColors.text }]}>칼로리: {recipe.nutritionalInfo.calories}</Text>
+          <Text style={[styles.infoText, { color: currentColors.text }]}>단백질: {recipe.nutritionalInfo.protein}</Text>
+          <Text style={[styles.infoText, { color: currentColors.text }]}>탄수화물: {recipe.nutritionalInfo.carbs}</Text>
+          <Text style={[styles.infoText, { color: currentColors.text }]}>지방: {recipe.nutritionalInfo.fat}</Text>
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  container: { // 이제 ScrollView 또는 오류 시 View의 스타일이 됨
     flex: 1,
   },
-  centered: {
+  centered: { // 오류 메시지 중앙 정렬을 위해 유지
     justifyContent: 'center',
     alignItems: 'center',
   },
   recipeImage: {
     width: '100%',
-    height: Dimensions.get('window').width * 0.7, // 이미지 높이를 화면 너비의 70%로 설정
-    backgroundColor: '#e0e0e0',
+    height: Dimensions.get('window').width * 0.7,
+    backgroundColor: '#e0e0e0', // 이미지 로딩 중 배경색
   },
   contentContainer: {
     padding: 20,
   },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 12,
-    textAlign: 'center',
-  },
+  // title 스타일은 CustomAppBar로 대체되었으므로 삭제
+  // title: {
+  //   fontSize: 28,
+  //   fontWeight: 'bold',
+  //   marginBottom: 12,
+  //   textAlign: 'center',
+  // },
   metaSection: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginBottom: 8,
+    marginTop: 8, // 이미지와 제목 사이 간격 (제목이 AppBar로 이동했으므로 이미지 바로 아래 메타 정보)
   },
   metaText: {
     fontSize: 15,
   },
   sectionTitle: {
     fontSize: 22,
-    fontWeight: '600', // semibold
-    marginTop: 10,
+    fontWeight: '600',
+    marginTop: 10, // 이전 제목과의 간격 유지 또는 조정
     marginBottom: 12,
   },
   listItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee', // 테마 색상 currentColors.borderColor로 변경 가능
+    paddingVertical: 10, // 패딩 증가
+    borderBottomWidth: StyleSheet.hairlineWidth, // 더 얇은 구분선
+    // borderBottomColor는 컴포넌트에서 동적으로 설정
   },
   listItemText: {
     fontSize: 16,
-    flex: 1, // 이름이 길 경우 공간 차지
+    flex: 1,
   },
   listItemAmount: {
     fontSize: 16,
   },
   instructionText: {
     fontSize: 16,
-    lineHeight: 24,
-    marginBottom: 8,
+    lineHeight: 26, // 줄 간격 증가
+    marginBottom: 10, // 각 단계 사이 간격 증가
   },
-  infoText: { // 영양 정보 등 일반 텍스트
+  infoText: {
     fontSize: 16,
     lineHeight: 22,
     marginBottom: 4,
