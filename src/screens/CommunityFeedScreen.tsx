@@ -1,9 +1,9 @@
 // src/screens/CommunityFeedScreen.tsx
 
 import React from 'react';
-import { View, Text, StyleSheet, FlatList, useColorScheme, Image, TouchableOpacity } from 'react-native';
+import { FlatList, Image, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native';
+import CustomAppBar from '../components/organisms/CustomAppBar'; // CustomAppBar 임포트
 import { Colors } from '../constants/Colors'; // Colors 임포트
-import CustomAppBar from '../../components/organisms/CustomAppBar'; // CustomAppBar 임포트
 
 /**
  * @file CommunityFeedScreen.tsx

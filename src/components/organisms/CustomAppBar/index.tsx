@@ -1,7 +1,6 @@
-// src/components/organisms/CustomAppBar.tsx
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native';
-import { Colors } from '../../constants/Colors';
+import { Colors } from '../../../constants/Colors';
 
 interface CustomAppBarProps {
   title: string;
@@ -67,4 +66,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CustomAppBar;
+export default CustomAppBar; 

@@ -3,7 +3,11 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View, useColorScheme } 
 import { Colors } from '../constants/Colors'; // Colors 임포트
 // import { Ionicons } from '@expo/vector-icons'; // 아이콘 사용 시
 
-export default function SettingsScreen() {
+interface SettingsScreenProps {
+  onLogout?: () => void;
+}
+
+export default function SettingsScreen({ onLogout }: SettingsScreenProps) {
   const colorScheme = useColorScheme() ?? 'light';
   const currentColors = Colors[colorScheme];
 
@@ -25,6 +29,7 @@ export default function SettingsScreen() {
         <SettingItem label="알림" colors={currentColors} />
         <SettingItem label="계정 관리" colors={currentColors} />
         <SettingItem label="비밀번호 변경" colors={currentColors} />
+        <SettingItem label="로그아웃" colors={currentColors} onPress={onLogout} />
         <SettingItem label="계정 삭제" colors={currentColors} isDestructive={true} />
         <SettingItem label="앱 정보" colors={currentColors} />
         <SettingItem label="버전" rightText="1.0.0" colors={currentColors} />

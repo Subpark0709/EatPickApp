@@ -1,17 +1,17 @@
+import { RouteProp, useRoute } from '@react-navigation/native';
 import React from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  useColorScheme,
-  Image,
-  Dimensions,
+    Dimensions,
+    Image,
+    ScrollView,
+    StyleSheet,
+    Text,
+    useColorScheme,
+    View,
 } from 'react-native';
-import { useRoute, RouteProp } from '@react-navigation/native';
-import { HomeStackParamList } from '../navigation/AppNavigator'; // Adjust path if needed
-import { Colors } from '../constants/Colors'; // Adjust path if needed
-import CustomAppBar from '../../components/organisms/CustomAppBar'; // CustomAppBar 임포트
+import CustomAppBar from '../components/organisms/CustomAppBar';
+import { Colors } from '../constants/Colors';
+import { HomeStackParamList } from '../navigation/AppNavigator';
 
 // 상세 레시피 정보를 위한 목업 데이터
 const detailedMockRecipes = [

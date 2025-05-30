@@ -10,8 +10,9 @@
  */
 
 import { Ionicons } from '@expo/vector-icons';
-import { createDrawerNavigator } from '@react-navigation/drawer'; // Drawer Navigator 임포트
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createDrawerNavigator, DrawerScreenProps } from '@react-navigation/drawer'; // Drawer Navigator 임포트
+import { RouteProp } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import { useColorScheme } from 'react-native';
@@ -81,6 +82,19 @@ export type SettingsStackParamList = {
   // UserProfile: { userId: string }; // 필요하다면 여기에 UserProfile 추가
 };
 
+// RecipeListScreenProps 타입 정의
+type RecipeListScreenProps = {
+  recommendedRecipes: any[];
+};
+
+// SettingsScreenProps 타입 정의
+type SettingsScreenProps = {
+  onLogout: () => void;
+};
+
+// DrawerScreenProps 타입 정의
+type DrawerScreenPropsType = DrawerScreenProps<DrawerParamList>;
+
 // --- 네비게이터 인스턴스 ---
 const Drawer = createDrawerNavigator<DrawerParamList>();
 const Tab = createBottomTabNavigator<TabParamList>();
@@ -96,50 +110,65 @@ type SettingsScreenWithLogoutProps = {
   onLogout: () => void;
 };
 
-// Home 스택 네비게이터 (변경 없음)
+// RecipeListScreen 컴포넌트 타입 수정
+const RecipeListScreenWrapper: React.FC<{ route: RouteProp<any, 'RecipeList'> }> = ({ route }) => {
+  return <RecipeListScreen recommendedRecipes={route.params?.recommendedRecipes || []} />;
+};
+
+// SettingsScreen 컴포넌트 타입 수정
+type SettingsScreenWrapperProps = {
+  onLogout: () => void;
+  navigation: any;
+  route: any;
+};
+
+const SettingsScreenWrapper: React.FC<SettingsScreenWrapperProps> = ({ onLogout, ...props }) => {
+  return <SettingsScreen onLogout={onLogout} {...props} />;
+};
+
+// Home 스택 네비게이터 수정
 const HomeStackNavigator = () => {
   return (
     <HomeStack.Navigator screenOptions={{ headerShown: false }}>
       <HomeStack.Screen name="Main" component={MainScreen} />
       <HomeStack.Screen name="Recipe" component={RecipeScreen} />
       <HomeStack.Screen name="RecipeDetail" component={RecipeDetailScreen} initialParams={{ recipeId: '' }} />
-      <HomeStack.Screen name="RecipeList" component={RecipeListScreen} initialParams={{ recommendedRecipes: [] }} />
+      <HomeStack.Screen name="RecipeList" component={RecipeListScreenWrapper} initialParams={{ recommendedRecipes: [] }} />
       <HomeStack.Screen name="IngredientInput" component={IngredientInputScreen} />
       <HomeStack.Screen name="Camera" component={CameraScreen} />
     </HomeStack.Navigator>
   );
 };
 
-// Search 스택 네비게이터 (변경 없음)
+// Search 스택 네비게이터 수정
 const SearchStackNavigator = () => {
   return (
     <SearchStack.Navigator screenOptions={{ headerShown: false }}>
       <SearchStack.Screen name="Search" component={SearchScreen} />
       <SearchStack.Screen name="SearchWithElasticsearch" component={SearchWithElasticsearchScreen} />
       <SearchStack.Screen name="RecipeDetail" component={RecipeDetailScreen} initialParams={{ recipeId: '' }}/>
-      <SearchStack.Screen name="RecipeList" component={RecipeListScreen} initialParams={{ recommendedRecipes: [] }} />
+      <SearchStack.Screen name="RecipeList" component={RecipeListScreenWrapper} initialParams={{ recommendedRecipes: [] }} />
     </SearchStack.Navigator>
   );
 };
 
-// Community 스택 네비게이터 (변경 없음)
+// Community 스택 네비게이터 수정
 const CommunityStackNavigator = () => {
   return (
     <CommunityStack.Navigator screenOptions={{ headerShown: false }}>
       <CommunityStack.Screen name="Community" component={CommunityFeedScreen} />
       <CommunityStack.Screen name="RecipeDetail" component={RecipeDetailScreen} initialParams={{ recipeId: '' }} />
-      <CommunityStack.Screen name="RecipeList" component={RecipeListScreen} initialParams={{ recommendedRecipes: [] }} />
+      <CommunityStack.Screen name="RecipeList" component={RecipeListScreenWrapper} initialParams={{ recommendedRecipes: [] }} />
     </CommunityStack.Navigator>
   );
 };
 
-// Settings 스택 네비게이터 (ProfileStackNavigator에서 변경)
-// onLogout prop을 SettingsScreen으로 전달
+// Settings 스택 네비게이터 수정
 const SettingsStackNavigator: React.FC<SettingsScreenWithLogoutProps> = ({ onLogout }) => {
   return (
     <SettingsStack.Navigator screenOptions={{ headerShown: false }}>
       <SettingsStack.Screen name="Settings">
-        {props => <SettingsScreen {...props} onLogout={onLogout} />}
+        {props => <SettingsScreenWrapper {...props} onLogout={onLogout} />}
       </SettingsStack.Screen>
     </SettingsStack.Navigator>
   );
@@ -198,28 +227,24 @@ const DrawerNavigatorComponent: React.FC<SettingsScreenWithLogoutProps> = ({ onL
   return (
     <Drawer.Navigator
       screenOptions={{
-        headerShown: false, // 각 화면에서 자체 헤더 관리 또는 Tab/Stack에서 관리
+        headerShown: false,
         drawerActiveTintColor: currentColors.tint,
-        drawerInactiveTintColor: currentColors.placeholderText, // 또는 currentColors.text
+        drawerInactiveTintColor: currentColors.placeholderText,
         drawerLabelStyle: { marginLeft: -20, fontSize: 16 },
-        // drawerStyle: { backgroundColor: currentColors.background } // Drawer 배경색
       }}
     >
       <Drawer.Screen
         name="AppTabs"
-        options={{ title: '메인 메뉴' }} // Drawer에 표시될 이름
+        options={{ title: '메인 메뉴' }}
       >
-        {/* TabNavigatorComponent에 onLogout prop 전달 */}
-        {props => <TabNavigatorComponent {...props} onLogout={onLogout} />}
+        {(props: DrawerScreenPropsType) => <TabNavigatorComponent {...props} onLogout={onLogout} />}
       </Drawer.Screen>
       <Drawer.Screen
         name="SettingsDrawer"
-        options={{ title: '설정 (Drawer)' }} // Drawer에 표시될 이름
+        options={{ title: '설정 (Drawer)' }}
       >
-        {/* SettingsScreen에 onLogout prop 직접 전달 */}
-        {props => <SettingsScreen {...props} onLogout={onLogout} />}
+        {(props: DrawerScreenPropsType) => <SettingsScreenWrapper {...props} onLogout={onLogout} />}
       </Drawer.Screen>
-      {/* 필요에 따라 여기에 더 많은 Drawer 스크린 추가 */}
     </Drawer.Navigator>
   );
 };

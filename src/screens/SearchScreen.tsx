@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, useColorScheme } from 'react-native';
+import CustomAppBar from '../components/organisms/CustomAppBar'; // CustomAppBar 임포트
 import { Colors } from '../constants/Colors'; // Colors 임포트
-import CustomAppBar from '../../components/organisms/CustomAppBar'; // CustomAppBar 임포트
 
 // 카테고리 목록 (한국어)
 const categories = [
