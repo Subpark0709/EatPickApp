@@ -19,7 +19,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 // Import screen components. Ensure these paths are correct and screens exist.
 // The WelcomeScreen.tsx is assumed to exist from the initial project structure.
 // LoginScreen and SignupScreen would be new screens for authentication.
-// import WelcomeScreen from '../screens/WelcomeScreen'; 
+import WelcomeScreen from '../screens/WelcomeScreen'; 
 // import LoginScreen from '../screens/LoginScreen'; // To be created
 // import SignupScreen from '../screens/SignupScreen'; // To be created
 
@@ -43,12 +43,13 @@ const AuthNavigator: React.FC = () => {
     >
       {/* 
       Example Screens (actual components need to be imported and working):
-
+      */}
       <Stack.Screen 
         name="Welcome" 
         component={WelcomeScreen} 
         // options={{ headerShown: false }} // Example: hide header for welcome screen
       />
+      {/*
       <Stack.Screen 
         name="Login" 
         component={LoginScreen} // Replace with actual LoginScreen component

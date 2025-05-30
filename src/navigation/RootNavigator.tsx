@@ -22,7 +22,7 @@ const RootNavigator: React.FC = () => {
   // Simulate authentication state - replace with actual auth logic from store/context later
   // Defaulting to true allows direct testing of AppNavigator and its screens.
   // Set to false to test AuthNavigator.
-  const [isAuthenticated, setIsAuthenticated] = useState(true); 
+  const [isAuthenticated, setIsAuthenticated] = useState(false); 
 
   // Example of how you might integrate with a global state or async storage for auth:
   // const { user, isLoadingAuth } = useAuth(); // Assuming useAuth() provides user and loading state
