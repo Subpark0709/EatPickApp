@@ -20,7 +20,7 @@ const recentSearches = [
   'Salad'
 ];
 
-export default function SearchScreen() {
+const SearchScreen: React.FC = () => {
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -59,7 +59,7 @@ export default function SearchScreen() {
       </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -122,4 +122,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#181111',
   },
-}); 
+});
+
+export default SearchScreen; 

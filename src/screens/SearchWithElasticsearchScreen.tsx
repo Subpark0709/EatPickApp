@@ -1,7 +1,7 @@
 // src/screens/SearchWithElasticsearchScreen.tsx
 
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Button, FlatList } from 'react-native';
+import { Button, FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
 
 /**
  * @file SearchWithElasticsearchScreen.tsx
@@ -66,7 +66,7 @@ const SearchWithElasticsearchScreen: React.FC<SearchWithElasticsearchScreenProps
       <FlatList
         data={results}
         keyExtractor={(item) => item.id}
-        renderItem={({ item })="{" (
+        renderItem={({ item }) => (
           <View style={styles.resultItem}>
             <Text style={styles.resultType}>{item.type.toUpperCase()}</Text>
             <Text style={styles.resultTitle}>{item.title}</Text>

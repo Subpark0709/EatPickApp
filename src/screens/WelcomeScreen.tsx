@@ -1,3 +1,4 @@
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
 import {
@@ -12,6 +13,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { AuthStackParamList } from '../navigation/AuthNavigator';
 
 const googleIcon: ImageSourcePropType = require('../assets/icon/google_icon.png');
 const kakaoIcon: ImageSourcePropType = require('../assets/icon/kakao_icon.png');
@@ -19,7 +21,7 @@ const backgroundImage: ImageSourcePropType = require('../assets/welcome_backgrou
 
 WebBrowser.maybeCompleteAuthSession();
 
-type WelcomeScreenProps = {
+type WelcomeScreenProps = NativeStackScreenProps<AuthStackParamList, 'Welcome'> & {
   onLogin: () => void;
 };
 

@@ -1,6 +1,5 @@
 // src/navigation/RootNavigator.tsx
-import React, { useState, useEffect } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import React, { useState } from 'react';
 import AppNavigator from './AppNavigator';
 import AuthNavigator from './AuthNavigator';
 // import { useAuth } from '../store/hooks/useAuth'; // Example of a custom hook to get auth state
@@ -38,11 +37,11 @@ const RootNavigator: React.FC = () => {
   //   return <View><Text>Loading authentication...</Text></View>;
   // }
 
-  return (
-    <NavigationContainer>
-      {isAuthenticated ? <AppNavigator /> : <AuthNavigator />}
-    </NavigationContainer>
-  );
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+  };
+
+  return isAuthenticated ? <AppNavigator /> : <AuthNavigator onLogin={handleLogin} />;
 };
 
 export default RootNavigator;

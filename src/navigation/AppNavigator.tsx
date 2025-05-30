@@ -12,96 +12,202 @@
  * navigation flow. It is typically shown after a successful login/signup flow managed by AuthNavigator.
  */
 
-import React from 'react';
+import { Ionicons } from '@expo/vector-icons';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-// import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'; // Example for Tab-based main navigation
+import React from 'react';
+import CameraScreen from '../screens/CameraScreen';
+import CommunityFeedScreen from '../screens/CommunityFeedScreen';
+import IngredientInputScreen from '../screens/IngredientInputScreen';
+import MainScreen from '../screens/MainScreen';
+import ProfileScreen from '../screens/ProfileScreen';
+import RecipeDetailScreen from '../screens/RecipeDetailScreen';
+import RecipeListScreen from '../screens/RecipeListScreen';
+import RecipeScreen from '../screens/RecipeScreen';
+import SearchScreen from '../screens/SearchScreen';
+import SearchWithElasticsearchScreen from '../screens/SearchWithElasticsearchScreen';
+import SettingsScreen from '../screens/SettingsScreen';
+import UserProfileScreen from '../screens/UserProfileScreen';
 
-// Import screen components (These are placeholders and might need adjustment)
-// Ensure these paths are correct once the screens are finalized.
-// import IngredientInputScreen from '../screens/IngredientInputScreen';
-// import RecipeListScreen from '../screens/RecipeListScreen';
-// import RecipeDetailScreen from '../screens/RecipeDetailScreen';
-// import CommunityFeedScreen from '../screens/CommunityFeedScreen';
-// import UserProfileScreen from '../screens/UserProfileScreen';
-// import SearchWithElasticsearchScreen from '../screens/SearchWithElasticsearchScreen';
-// import MainScreen from '../screens/MainScreen'; // Might be a dashboard or home
-
-// Define the ParamList for the stack if using TypeScript.
-// This would be more complex if using a TabNavigator, with nested StackNavigators.
-// For simplicity, a single StackNavigator is shown here.
-export type AppStackParamList = {
-  Main: undefined; // Could be IngredientInputScreen or a dedicated MainScreen
-  IngredientInput: undefined;
-  RecipeList: { ingredients?: string[]; query?: string }; // Can be reached from ingredients or search
-  RecipeDetail: { recipeId: string };
-  CommunityFeed: undefined;
-  UserProfile: { userId?: string }; // Optional userId for viewing other profiles
-  SearchWithElasticsearch: undefined;
-  // ... other authenticated screens like Settings, MyRecipes, etc.
+// 탭 네비게이션 타입 정의
+export type TabParamList = {
+  Home: undefined;
+  Search: undefined;
+  Community: undefined;
+  Profile: undefined;
 };
 
-const Stack = createNativeStackNavigator<AppStackParamList>();
-// const Tab = createBottomTabNavigator(); // If using Bottom Tabs
+// 홈 스택 타입 정의
+export type HomeStackParamList = {
+  Main: undefined;
+  Recipe: undefined;
+  RecipeDetail: { recipeId: string };
+  RecipeList: { recommendedRecipes: any[] };
+  IngredientInput: undefined;
+  Camera: undefined;
+};
 
-// Example of a simple StackNavigator. A real app might use BottomTabNavigator here.
-const AppNavigator: React.FC = () => {
+// 검색 스택 타입 정의
+export type SearchStackParamList = {
+  Search: undefined;
+  SearchWithElasticsearch: undefined;
+  RecipeDetail: { recipeId: string };
+  RecipeList: { recommendedRecipes: any[] };
+};
+
+// 커뮤니티 스택 타입 정의
+export type CommunityStackParamList = {
+  Community: undefined;
+  RecipeDetail: { recipeId: string };
+  RecipeList: { recommendedRecipes: any[] };
+};
+
+// 프로필 스택 타입 정의
+export type ProfileStackParamList = {
+  Profile: undefined;
+  UserProfile: { userId: string };
+  Settings: undefined;
+};
+
+const Tab = createBottomTabNavigator<TabParamList>();
+const HomeStack = createNativeStackNavigator<HomeStackParamList>();
+const SearchStack = createNativeStackNavigator<SearchStackParamList>();
+const CommunityStack = createNativeStackNavigator<CommunityStackParamList>();
+const ProfileStack = createNativeStackNavigator<ProfileStackParamList>();
+
+// 홈 탭 스택 네비게이터
+const HomeStackNavigator = () => {
   return (
-    <Stack.Navigator 
-      initialRouteName="Main" // Or "IngredientInput" or a dedicated "HomeScreen"
-      screenOptions={{
-        // Common screen options for the App stack
-      }}
-    >
-      {/* 
-      Example Screens (actual components need to be imported and working):
-      
-      <Stack.Screen 
-        name="Main" 
-        component={MainScreen} // Replace MainScreen with actual initial screen like IngredientInputScreen
-        options={{ title: 'Home Chef' }} 
-      />
-      <Stack.Screen 
-        name="IngredientInput" 
-        component={IngredientInputScreen} 
-        options={{ title: 'Add Ingredients' }} 
-      />
-      <Stack.Screen 
-        name="RecipeList" 
-        component={RecipeListScreen} 
-        options={({ route }) => ({ title: route.params.query ? 'Search Results' : 'Recommended Recipes' })} 
-      />
-      <Stack.Screen 
+    <HomeStack.Navigator screenOptions={{ headerShown: false }}>
+      <HomeStack.Screen name="Main" component={MainScreen} />
+      <HomeStack.Screen name="Recipe" component={RecipeScreen} />
+      <HomeStack.Screen 
         name="RecipeDetail" 
-        component={RecipeDetailScreen} 
-        options={{ title: 'Recipe Details' }} 
+        component={RecipeDetailScreen}
+        initialParams={{ recipeId: '' }}
       />
-      <Stack.Screen 
-        name="CommunityFeed" 
-        component={CommunityFeedScreen} 
-        options={{ title: 'Community Feed' }} 
+      <HomeStack.Screen 
+        name="RecipeList" 
+        component={RecipeListScreen}
+        initialParams={{ recommendedRecipes: [] }}
       />
-      <Stack.Screen 
-        name="UserProfile" 
-        component={UserProfileScreen} 
-        options={{ title: 'My Profile' }} 
-      />
-      <Stack.Screen 
-        name="SearchWithElasticsearch" 
-        component={SearchWithElasticsearchScreen} 
-        options={{ title: 'Advanced Search' }} 
-      />
-      */}
-      {/* 
-      If using BottomTabNavigator:
-      <Tab.Navigator>
-        <Tab.Screen name="Home" component={IngredientInputScreenStack} /> // Where IngredientInputScreenStack is another StackNavigator
-        <Tab.Screen name="Search" component={SearchScreenStack} />
-        <Tab.Screen name="Community" component={CommunityFeedScreenStack} />
-        <Tab.Screen name="Profile" component={UserProfileScreenStack} />
-      </Tab.Navigator>
-      */}
-    </Stack.Navigator>
+      <HomeStack.Screen name="IngredientInput" component={IngredientInputScreen} />
+      <HomeStack.Screen name="Camera" component={CameraScreen} />
+    </HomeStack.Navigator>
   );
+};
+
+// 검색 탭 스택 네비게이터
+const SearchStackNavigator = () => {
+  return (
+    <SearchStack.Navigator screenOptions={{ headerShown: false }}>
+      <SearchStack.Screen name="Search" component={SearchScreen} />
+      <SearchStack.Screen name="SearchWithElasticsearch" component={SearchWithElasticsearchScreen} />
+      <SearchStack.Screen 
+        name="RecipeDetail" 
+        component={RecipeDetailScreen}
+        initialParams={{ recipeId: '' }}
+      />
+      <SearchStack.Screen 
+        name="RecipeList" 
+        component={RecipeListScreen}
+        initialParams={{ recommendedRecipes: [] }}
+      />
+    </SearchStack.Navigator>
+  );
+};
+
+// 커뮤니티 탭 스택 네비게이터
+const CommunityStackNavigator = () => {
+  return (
+    <CommunityStack.Navigator screenOptions={{ headerShown: false }}>
+      <CommunityStack.Screen name="Community" component={CommunityFeedScreen} />
+      <CommunityStack.Screen 
+        name="RecipeDetail" 
+        component={RecipeDetailScreen}
+        initialParams={{ recipeId: '' }}
+      />
+      <CommunityStack.Screen 
+        name="RecipeList" 
+        component={RecipeListScreen}
+        initialParams={{ recommendedRecipes: [] }}
+      />
+    </CommunityStack.Navigator>
+  );
+};
+
+// 프로필 탭 스택 네비게이터
+const ProfileStackNavigator = () => {
+  return (
+    <ProfileStack.Navigator screenOptions={{ headerShown: false }}>
+      <ProfileStack.Screen name="Profile" component={ProfileScreen} />
+      <ProfileStack.Screen 
+        name="UserProfile" 
+        component={() => <UserProfileScreen userId="current" />}
+      />
+      <ProfileStack.Screen name="Settings" component={SettingsScreen} />
+    </ProfileStack.Navigator>
+  );
+};
+
+const TabNavigator = () => {
+  return (
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+
+          if (route.name === 'Home') {
+            iconName = focused ? 'home' : 'home-outline';
+          } else if (route.name === 'Search') {
+            iconName = focused ? 'search' : 'search-outline';
+          } else if (route.name === 'Community') {
+            iconName = focused ? 'people' : 'people-outline';
+          } else if (route.name === 'Profile') {
+            iconName = focused ? 'person' : 'person-outline';
+          }
+
+          return <Ionicons name={iconName as any} size={size} color={color} />;
+        },
+        tabBarActiveTintColor: '#FF6B6B',
+        tabBarInactiveTintColor: 'gray',
+        headerShown: false,
+      })}
+    >
+      <Tab.Screen 
+        name="Home" 
+        component={HomeStackNavigator}
+        options={{
+          title: '홈',
+        }}
+      />
+      <Tab.Screen 
+        name="Search" 
+        component={SearchStackNavigator}
+        options={{
+          title: '검색',
+        }}
+      />
+      <Tab.Screen 
+        name="Community" 
+        component={CommunityStackNavigator}
+        options={{
+          title: '커뮤니티',
+        }}
+      />
+      <Tab.Screen 
+        name="Profile" 
+        component={ProfileStackNavigator}
+        options={{
+          title: '프로필',
+        }}
+      />
+    </Tab.Navigator>
+  );
+};
+
+const AppNavigator: React.FC = () => {
+  return <TabNavigator />;
 };
 
 export default AppNavigator;
