@@ -1,8 +1,9 @@
 // src/screens/CommunityFeedScreen.tsx
 
 import React from 'react';
-import { View, Text, StyleSheet, FlatList, useColorScheme, Image, TouchableOpacity } from 'react-native'; // useColorScheme, Image, TouchableOpacity 추가
+import { View, Text, StyleSheet, FlatList, useColorScheme, Image, TouchableOpacity } from 'react-native';
 import { Colors } from '../constants/Colors'; // Colors 임포트
+import CustomAppBar from '../../components/organisms/CustomAppBar'; // CustomAppBar 임포트
 
 /**
  * @file CommunityFeedScreen.tsx
@@ -54,8 +55,8 @@ const CommunityFeedScreen: React.FC<CommunityFeedScreenProps> = (props) => {
 
   const renderFeedItem = ({ item }: { item: FeedItem }) => (
     <TouchableOpacity
-      style={[styles.feedItem, { backgroundColor: currentColors.cardBackground }]}
-      onPress={() => props.onSelectRecipe?.(item.id)} // 레시피 상세 화면으로 이동 (가정)
+      style={[styles.feedItem, { backgroundColor: currentColors.cardBackground, shadowColor: currentColors.text }]} // Added shadowColor based on theme
+      onPress={() => props.onSelectRecipe?.(item.id)}
     >
       <View style={styles.feedItemHeader}>
         {item.userAvatarUrl && <Image source={{ uri: item.userAvatarUrl }} style={styles.avatar} />}
@@ -70,8 +71,7 @@ const CommunityFeedScreen: React.FC<CommunityFeedScreenProps> = (props) => {
           좋아요: {item.likes}  댓글: {item.commentsCount}
         </Text>
       </View>
-      {/* 좋아요/댓글 버튼, 이미지 등을 위한 향후 UI 요소 */}
-      <View style={styles.feedItemActions}>
+      <View style={[styles.feedItemActions, { borderTopColor: currentColors.borderColor }]}> {/* Themed borderTopColor */}
         <TouchableOpacity style={styles.actionButton}>
           <Text style={[styles.actionText, {color: currentColors.primary}]}>👍 좋아요</Text>
         </TouchableOpacity>
@@ -84,13 +84,16 @@ const CommunityFeedScreen: React.FC<CommunityFeedScreenProps> = (props) => {
 
   return (
     <View style={[styles.container, { backgroundColor: currentColors.background }]}>
+      <CustomAppBar title="커뮤니티" />
+      {/* 기존 title Text는 CustomAppBar로 대체되었으므로 삭제
       <Text style={[styles.title, { color: currentColors.text }]}>커뮤니티 피드</Text>
+      */}
       <FlatList
         data={feedItems}
         keyExtractor={(item) => item.id}
         renderItem={renderFeedItem}
-        ItemSeparatorComponent={() => <View style={{ height: 12, backgroundColor: currentColors.background }} />} // 아이템 간 간격
-        contentContainerStyle={{ paddingBottom: 16 }} // 하단 패딩 추가
+        ItemSeparatorComponent={() => <View style={{ height: 12, backgroundColor: currentColors.background }} />}
+        contentContainerStyle={styles.listContentContainer} // Changed from paddingBottom to this
       />
     </View>
   );
@@ -99,22 +102,26 @@ const CommunityFeedScreen: React.FC<CommunityFeedScreenProps> = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor는 컴포넌트에서 동적으로 설정
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 16,
-    paddingHorizontal: 16, // 타이틀에도 패딩 적용
-    paddingTop: 16,
-    // color는 컴포넌트에서 동적으로 설정
+  // title 스타일은 CustomAppBar로 대체되었으므로 삭제
+  // title: {
+  //   fontSize: 24,
+  //   fontWeight: 'bold',
+  //   marginBottom: 16,
+  //   paddingHorizontal: 16,
+  //   paddingTop: 16,
+  // },
+  listContentContainer: { // FlatList에 대한 패딩
+    paddingHorizontal: 16, // 좌우 마진 대신 FlatList 내부 패딩으로 변경
+    paddingTop: 16, // CustomAppBar와의 간격
+    paddingBottom: 16, // 하단 여백
   },
   feedItem: {
-    borderRadius: 12, // 모서리 둥글게
-    marginHorizontal: 16, // 좌우 마진
-    overflow: 'hidden', // 이미지 등 내용이 넘치지 않도록
-    elevation: 2, // 안드로이드 그림자
-    shadowColor: '#000000', // iOS 그림자
+    borderRadius: 12,
+    // marginHorizontal: 16, // FlatList 패딩으로 대체
+    overflow: 'hidden',
+    elevation: 2,
+    // shadowColor 는 컴포넌트에서 동적으로 설정
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 3,
@@ -129,16 +136,16 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     marginRight: 10,
-    backgroundColor: '#E0E0E0', // 이미지 없을 시 배경색
+    backgroundColor: '#E0E0E0',
   },
   userName: {
     fontSize: 16,
-    fontWeight: '600', // semibold
+    fontWeight: '600',
   },
   recipeImage: {
     width: '100%',
-    height: 250, // 이미지 높이 조절
-    backgroundColor: '#E0E0E0', // 이미지 없을 시 배경색
+    height: 250,
+    backgroundColor: '#E0E0E0',
   },
   feedItemContent: {
     padding: 12,
@@ -148,15 +155,15 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 6,
   },
-  feedItemStats: { // 좋아요, 댓글 수 텍스트 스타일
+  feedItemStats: {
     fontSize: 14,
   },
   feedItemActions: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     paddingVertical: 8,
-    borderTopWidth: 1,
-    // borderTopColor는 ItemSeparatorComponent 사용 시 필요 없을 수 있으나, 카드 내부 구분선으로 사용
+    borderTopWidth: StyleSheet.hairlineWidth, // 더 얇은 선
+    // borderTopColor는 컴포넌트에서 동적으로 설정
   },
   actionButton: {
     padding: 8,
